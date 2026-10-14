@@ -2,9 +2,20 @@ import { createRoot } from "react-dom/client";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.css";
 import Pedido from './Pedido'
+import Cartao from './Cartao'
+import Feedback from './Feedback'
 
 // componente = constante que guarda uma função que retorna código JSX
 const App = () => {
+
+  const textoOK = "Já chegou"
+  const textoNOK = "Ainda não chegou"
+  const funcaoOK = () => alert("Agradecemos a confirmação!!")
+  const funcaoNOK = () => alert("Verificaremos o ocorrido!!")
+  const componenteFeedback = <Feedback textoOK={textoOK} funcaoOK={funcaoOK}
+  textoNOK={textoNOK} funcaoNOK={funcaoNOK}/>
+
+  // código JSX de interface, do return em diante
   return (
     // container principal
     <div className="container border rounded mt-2">
@@ -18,8 +29,11 @@ const App = () => {
         {/*controle de colunas para responsividade*/}
         <div className="col-sm-8 col-md-6 m-2">
             {/*cartão*/}
-            <Pedido data="22/04/2021" icone="fas fa-hdd fa-2x" titulo="SSD"
+            <Cartao cabecalho="22/04/2021">
+              <Pedido icone="fas fa-hdd fa-2x" titulo="SSD" 
               descricao="SSD Kingston A400 - SATA"/>
+              {componenteFeedback}
+            </Cartao>
         </div>
       </div>
 
@@ -28,8 +42,12 @@ const App = () => {
         {/*controle de colunas para responsividade*/}
         <div className="col-sm-8 col-md-6 m-2">
           {/*cartão*/}
-          <Pedido data="25/04/2021" icone="fas fa-book fa-2x" titulo="Livro"
+          <Cartao cabecalho="25/04/2021">
+            <Pedido icone="fas fa-book fa-2x" titulo="Livro"
               descricao="Concrete Mathematics - Donald Knuth"/>
+            <Feedback textoOK={textoOK} funcaoOK={funcaoOK}
+              textoNOK={textoNOK} funcaoNOK={funcaoNOK}/>
+          </Cartao>
         </div>
       </div>
 
@@ -38,8 +56,11 @@ const App = () => {
         {/*controle de colunas para responsividade*/}
         <div className="col-sm-8 col-md-6 m-2">
           {/*cartão*/}
-          <Pedido data="27/04/2021" icone="fas fa-laptop fa-2x" titulo="Notebook"
+          <Cartao cabecalho="27/04/21">
+            <Pedido icone="fas fa-laptop fa-2x" titulo="Notebook"
               descricao="Notebook Dell - 8Gb - i5"/>
+            {componenteFeedback}
+          </Cartao>
         </div>
       </div>
     </div>
