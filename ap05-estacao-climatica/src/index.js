@@ -14,6 +14,7 @@ class App extends React.Component {
       estacao: null,
       data: null,
       icone: null,
+      mensagemDeErro: null,
     };
   }
 
@@ -48,8 +49,79 @@ class App extends React.Component {
     Inverno: "fa-snowman",
   };
 
+  obterLocalizacao = () => {
+    window.navigator.geolocation.getCurrentPosition(
+      // callback
+      (posicao) => {
+        let data = new Date();
+        let estacao = this.obterEstacao(data, posicao.coords.latitude);
+        let icone = this.icones[estacao];
+        //console.log(icone)
+        this.setState({
+          latitude: posicao.coords.latitude,
+          longitude: posicao.coords.longitude,
+          estacao: estacao,
+          data: data.toLocaleTimeString(),
+          icone: icone,
+        });
+      },
+      (erro) => {
+        console.log(erro);
+        this.setState({ mensagemDeErro: "Tente novamente mais tarde" });
+      },
+    );
+  };
+
   render() {
-    return <div>Meu app</div>;
+    console.log(this.state);
+
+    // render() executa sempre que o estado do componente é alterado
+    return (
+      <div className="container mt-2">
+        {/*uma linha, conteúdo centralizado, display flex*/}
+        <div className="row justify-content-center">
+          {/*a partir do breakpoint medium, passa a ocupar 8/12 do espaço horizontal*/}
+          <div className="col-md-8">
+            {/*cartão do Bootstrap*/}
+            <div className="card">
+              {/*corpo do cartão*/}
+              <div className="card-body">
+                {/*centraliza os elementos e margem abaixo*/}
+                <div
+                  className="d-flex align-items-center border rounded mb-2"
+                  style={{ height: "6rem" }}
+                >
+                  {/*icone obtido do estado do componente*/}
+                  <i className={`fas fa-5x ${this.state.icone}`}></i>
+                  {/*largura 75%, margem à esquerda (start), fs aumenta a fonte*/}
+                  <p className="w-75 ms-3 text-center fs-1">
+                    {this.state.estacao}
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-center">
+                    {/*renderização condicional*/}
+                    {this.state.latitude
+                      ? `Coordenadas: ${this.state.latitude}, ${this.state.longitude}. Data: ${this.state.data}`
+                      : this.state.mensagemDeErro
+                        ? `${this.state.mensagemDeErro}`
+                        : "Clique no botão para saber a sua estação climática"}
+                  </p>
+                </div>
+
+                <button
+                  onClick={this.obterLocalizacao}
+                  className="btn btn-outline-primary w-100 mt-2"
+                >
+                  Qual a minha estação?
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 }
 // createRoot = cria a raiz da aplicação
