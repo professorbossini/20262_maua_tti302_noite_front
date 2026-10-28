@@ -1,21 +1,48 @@
 import { createRoot } from "react-dom/client";
 import React from "react";
+import { EstacaoClimatica } from "./EstacaoClimatica";
 
 // componente de classe = classe que herda de Component
 // entre as várias funções herdadas de Component, a função render() serve
 // para retornar o JSX do componente de classe
 class App extends React.Component {
   // definimos o estado inicial do componente
-  constructor(props) {
-    super(props);
-    this.state = {
-      latitude: null,
-      longitude: null,
-      estacao: null,
-      data: null,
-      icone: null,
-      mensagemDeErro: null,
-    };
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     latitude: null,
+  //     longitude: null,
+  //     estacao: null,
+  //     data: null,
+  //     icone: null,
+  //     mensagemDeErro: null,
+  //   };
+  //   console.log("Construtor")
+  // }
+
+  state = {
+    latitude: null,
+    longitude: null,
+    estacao: null,
+    data: null,
+    icone: null,
+    mensagemDeErro: null,
+  };
+
+  // executa no momento em que o componente é inserido no DOM
+  componentDidMount() {
+    console.log("componentDidMount");
+    this.obterLocalizacao(); // altera o estado do componente = executa render() > componentDidUpdate()
+  }
+
+  // executa toda vez que o estado do componente é alterado (depois do render())
+  componentDidUpdate() {
+    console.log("componentDidUpdate");
+  }
+
+  // executa antes do componente ser removido do DOM
+  componentWillUnmount() {
+    console.log("componentWillUnmount");
   }
 
   obterEstacao = (data, latitude) => {
@@ -51,7 +78,7 @@ class App extends React.Component {
 
   obterLocalizacao = () => {
     window.navigator.geolocation.getCurrentPosition(
-      // callback
+      // 1ª callback = executa quando conseguimos a localização
       (posicao) => {
         let data = new Date();
         let estacao = this.obterEstacao(data, posicao.coords.latitude);
@@ -65,6 +92,7 @@ class App extends React.Component {
           icone: icone,
         });
       },
+      // 2ª callback = executa quando NÃO conseguimos a localização
       (erro) => {
         console.log(erro);
         this.setState({ mensagemDeErro: "Tente novamente mais tarde" });
@@ -73,7 +101,7 @@ class App extends React.Component {
   };
 
   render() {
-    console.log(this.state);
+    console.log("render");
 
     // render() executa sempre que o estado do componente é alterado
     return (
@@ -82,42 +110,16 @@ class App extends React.Component {
         <div className="row justify-content-center">
           {/*a partir do breakpoint medium, passa a ocupar 8/12 do espaço horizontal*/}
           <div className="col-md-8">
-            {/*cartão do Bootstrap*/}
-            <div className="card">
-              {/*corpo do cartão*/}
-              <div className="card-body">
-                {/*centraliza os elementos e margem abaixo*/}
-                <div
-                  className="d-flex align-items-center border rounded mb-2"
-                  style={{ height: "6rem" }}
-                >
-                  {/*icone obtido do estado do componente*/}
-                  <i className={`fas fa-5x ${this.state.icone}`}></i>
-                  {/*largura 75%, margem à esquerda (start), fs aumenta a fonte*/}
-                  <p className="w-75 ms-3 text-center fs-1">
-                    {this.state.estacao}
-                  </p>
-                </div>
-
-                <div>
-                  <p className="text-center">
-                    {/*renderização condicional*/}
-                    {this.state.latitude
-                      ? `Coordenadas: ${this.state.latitude}, ${this.state.longitude}. Data: ${this.state.data}`
-                      : this.state.mensagemDeErro
-                        ? `${this.state.mensagemDeErro}`
-                        : "Clique no botão para saber a sua estação climática"}
-                  </p>
-                </div>
-
-                <button
-                  onClick={this.obterLocalizacao}
-                  className="btn btn-outline-primary w-100 mt-2"
-                >
-                  Qual a minha estação?
-                </button>
-              </div>
-            </div>
+            {/*renderiza o código do componente EstacaoClimatica*/}
+            <EstacaoClimatica
+              icone={this.state.icone}
+              estacao={this.state.estacao}
+              latitude={this.state.latitude}
+              longitude={this.state.longitude}
+              data={this.state.data}
+              mensagemDeErro={this.state.mensagemDeErro}
+              obterLocalizacao={this.obterLocalizacao}
+            />
           </div>
         </div>
       </div>
@@ -128,4 +130,5 @@ class App extends React.Component {
 // raiz da aplicação = elemento da árvore DOM (index.html) onde será
 // renderizado o código JSX
 // o método render() renderiza o JSX na raiz da aplicação
-createRoot(document.getElementById("root")).render(<App />);
+const root = createRoot(document.getElementById("root"));
+root.render(<App />);
