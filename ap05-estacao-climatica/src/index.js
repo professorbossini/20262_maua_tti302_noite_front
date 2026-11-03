@@ -1,24 +1,9 @@
 import { createRoot } from "react-dom/client";
 import React from "react";
 import { EstacaoClimatica } from "./EstacaoClimatica";
+import Loading from "./Loading";
 
-// componente de classe = classe que herda de Component
-// entre as várias funções herdadas de Component, a função render() serve
-// para retornar o JSX do componente de classe
 class App extends React.Component {
-  // definimos o estado inicial do componente
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     latitude: null,
-  //     longitude: null,
-  //     estacao: null,
-  //     data: null,
-  //     icone: null,
-  //     mensagemDeErro: null,
-  //   };
-  //   console.log("Construtor")
-  // }
 
   state = {
     latitude: null,
@@ -29,7 +14,6 @@ class App extends React.Component {
     mensagemDeErro: null,
   };
 
-  // executa no momento em que o componente é inserido no DOM
   componentDidMount() {
     console.log("componentDidMount");
     this.obterLocalizacao(); // altera o estado do componente = executa render() > componentDidUpdate()
@@ -111,15 +95,24 @@ class App extends React.Component {
           {/*a partir do breakpoint medium, passa a ocupar 8/12 do espaço horizontal*/}
           <div className="col-md-8">
             {/*renderiza o código do componente EstacaoClimatica*/}
-            <EstacaoClimatica
-              icone={this.state.icone}
-              estacao={this.state.estacao}
-              latitude={this.state.latitude}
-              longitude={this.state.longitude}
-              data={this.state.data}
-              mensagemDeErro={this.state.mensagemDeErro}
-              obterLocalizacao={this.obterLocalizacao}
-            />
+            {
+              (!this.state.latitude && !this.state.mensagemDeErro) ?
+                <Loading 
+                  mensagem="Por favor, responda à solicitação de localização"/> :
+                this.state.mensagemDeErro ?
+                  <p className="border rounded p-2 fs-1 text-center">
+                    É preciso dar permissão de acesso à localização.
+                  </p> :
+
+                  <EstacaoClimatica
+                    icone={this.state.icone}
+                    estacao={this.state.estacao}
+                    latitude={this.state.latitude}
+                    longitude={this.state.longitude}
+                    data={this.state.data}
+                    mensagemDeErro={this.state.mensagemDeErro}
+                    obterLocalizacao={this.obterLocalizacao} />
+            }
           </div>
         </div>
       </div>
