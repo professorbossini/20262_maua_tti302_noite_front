@@ -8,7 +8,8 @@ class App extends React.Component{
       longitude: null,
       estacao: null,
       data: null,
-      icone: null
+      icone: null,
+      mensagemDeErro: null
     }
   }
 
@@ -48,6 +49,7 @@ class App extends React.Component{
         //pegar o nome do icone correspondente
         const icone = this.icones[estacao]
         //atualizar estado com a funcao setState
+        //this.state.latitude = posicao.coords.latitude
         this.setState({
           latitude: posicao.coords.latitude,
           longitude: posicao.coords.longitude,
@@ -57,7 +59,8 @@ class App extends React.Component{
         })
       },
       (erro) => {
-
+        console.log(erro)
+        this.setState({mensagemDeErro: 'Tente novamente mais tarde'})
       }
     )
   }
@@ -69,12 +72,36 @@ class App extends React.Component{
       <div className='container mt-2'>
         <div className="row">
           <div className="col-md-8">
+            <i className="fa-solid fa-hippo fa-3x"></i>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md-8">
             <div className="card">
               <div className="card-body">
+
                 <div className="d-flex align-items-center border mb-2" style={{height: '6rem'}}>
                   <i className={`fa-5x ${this.state.icone}`}></i>
                   <p className='w-75 ms-3 text-center fs-1'>{this.state.estacao}</p>
-                </div> 
+                </div>
+
+                 <div>
+                    <p className="text-center">
+                      {
+                        this.state.latitude ?
+                        `Coordenadas: ${this.state.latitude},${this.state.longitude}. Data: ${this.state.data}` :
+                        this.state.mensagemDeErro ?
+                        `${this.state.mensagemDeErro}`:
+                        `Clique no botão para saber a sua estação climática`
+                      }  
+                    </p>
+                 </div>
+                 
+                 <button
+                  onClick={this.obterLocalizacao}
+                  className='btn btn-outline-primary w-100 mt-2'>
+                      Qual a minha estação?
+                 </button>
               </div>
             </div>
           </div>
