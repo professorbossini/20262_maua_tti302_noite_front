@@ -1,16 +1,27 @@
 import React from 'react'
+import EstacaoClimatica from './EstacaoClimatica'
 class App extends React.Component{
 
-  constructor(props){
-    super(props)  
-    this.state = {
-      latitude: null,
-      longitude: null,
-      estacao: null,
-      data: null,
-      icone: null,
-      mensagemDeErro: null
-    }
+  // constructor(props){
+  //   super(props)  
+  //   this.state = {
+  //     latitude: null,
+  //     longitude: null,
+  //     estacao: null,
+  //     data: null,
+  //     icone: null,
+  //     mensagemDeErro: null
+  //   }
+  //   console.log('constructor')
+  // }
+
+  state = {
+    latitude: null,
+    longitude: null,
+    estacao: null,
+    data: null,
+    icone: null,
+    mensagemDeErro: null
   }
 
   obterEstacao = (data, latitude) => {
@@ -65,9 +76,8 @@ class App extends React.Component{
     )
   }
 
-
-
   render(){
+    console.log('render')
     return (
       <div className='container mt-2'>
         <div className="row">
@@ -77,37 +87,24 @@ class App extends React.Component{
         </div>
         <div className="row">
           <div className="col-md-8">
-            <div className="card">
-              <div className="card-body">
-
-                <div className="d-flex align-items-center border mb-2" style={{height: '6rem'}}>
-                  <i className={`fa-5x ${this.state.icone}`}></i>
-                  <p className='w-75 ms-3 text-center fs-1'>{this.state.estacao}</p>
-                </div>
-
-                 <div>
-                    <p className="text-center">
-                      {
-                        this.state.latitude ?
-                        `Coordenadas: ${this.state.latitude},${this.state.longitude}. Data: ${this.state.data}` :
-                        this.state.mensagemDeErro ?
-                        `${this.state.mensagemDeErro}`:
-                        `Clique no botão para saber a sua estação climática`
-                      }  
-                    </p>
-                 </div>
-                 
-                 <button
-                  onClick={this.obterLocalizacao}
-                  className='btn btn-outline-primary w-100 mt-2'>
-                      Qual a minha estação?
-                 </button>
-              </div>
-            </div>
+            <EstacaoClimatica />
           </div>
         </div>
       </div>
     )
+  }
+
+  componentDidMount(){
+    console.log('componentDidMount')
+    this.obterLocalizacao()
+  }
+
+  componentDidUpdate(){
+    console.log('componentDidUpdate')
+  }
+
+  componentWillUnmount(){
+    console.log('componentWillUnmount')
   }
 }
 
