@@ -2,19 +2,6 @@ import React from 'react'
 import EstacaoClimatica from './EstacaoClimatica'
 class App extends React.Component{
 
-  // constructor(props){
-  //   super(props)  
-  //   this.state = {
-  //     latitude: null,
-  //     longitude: null,
-  //     estacao: null,
-  //     data: null,
-  //     icone: null,
-  //     mensagemDeErro: null
-  //   }
-  //   console.log('constructor')
-  // }
-
   state = {
     latitude: null,
     longitude: null,
@@ -77,7 +64,6 @@ class App extends React.Component{
   }
 
   render(){
-    console.log('render')
     return (
       <div className='container mt-2'>
         <div className="row">
@@ -87,7 +73,22 @@ class App extends React.Component{
         </div>
         <div className="row">
           <div className="col-md-8">
-            <EstacaoClimatica />
+            {
+              this.state.mensagemDeErro ?
+                <p className="border rounded p-2 fs-1 text-center">
+                  É preciso dar permissão para acesso à localização. Atualize a página e tente de novo, ajustando a configuração no seu navegador.
+                </p>
+              :
+              <EstacaoClimatica 
+                icone={this.state.icone}
+                estacao={this.state.estacao}
+                latitude={this.state.latitude}
+                longitude={this.state.longitude}
+                data={this.state.data}
+                mensagemDeErro={this.state.mensagemDeErro}
+                obterLocalizacao={this.obterLocalizacao}  />
+              
+            }
           </div>
         </div>
       </div>
