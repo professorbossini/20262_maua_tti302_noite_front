@@ -1,5 +1,6 @@
 import React from 'react'
 import EstacaoClimatica from './EstacaoClimatica'
+import Loading from './Loading'
 class App extends React.Component{
 
   state = {
@@ -74,6 +75,8 @@ class App extends React.Component{
         <div className="row">
           <div className="col-md-8">
             {
+              (!this.state.mensagemDeErro && !this.state.latitude) ?
+                <Loading mensagem="É preciso dar acesso à localização"/> :
               this.state.mensagemDeErro ?
                 <p className="border rounded p-2 fs-1 text-center">
                   É preciso dar permissão para acesso à localização. Atualize a página e tente de novo, ajustando a configuração no seu navegador.
